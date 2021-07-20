@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>dice-sim</title>
+		<meta charset="utf-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		
+		<script src="three.min.js"></script>
+		<script src="WebGL.js"></script>
+		<script src="physi.js"></script>
+		<script src="DeviceOrientationControls.js"></script>
+		<script src="customScene.js"></script>
+	</head>
+
+	<body style="margin: 0px; overflow: hidden;" class="vsc-initialized">
+		<script>
+			sceneInit();
+
+			const VISIBLE_WIDTH = visibleWidth( DEFAULT_OBJ_DEPTH, camera ),
+				  VISIBLE_HEIGHT = visibleHeight( DEFAULT_OBJ_DEPTH, camera );
+				  
+			containerInit();
+
+			camera.position.set( 0, 0.7*VISIBLE_HEIGHT/3, 2.1*DEFAULT_OBJ_DEPTH/2 );
+			camera.lookAt( new THREE.Vector3( 0, 10, -DEFAULT_OBJ_DEPTH/2 ) );
+			point_light.position.set( 0, VISIBLE_HEIGHT/6, 0 );
+
+			diceInit();
+
+			motion_control = new THREE.DeviceOrientationControls( center );
+
+			function animate() {
+				motion_control.update();
+				scene.simulate( 1/10 );
+
+				outOfBoundsAnimationHandler();
+
+				center.__dirtyRotation = true;
+				base_wall.__dirtyRotation = true;
+				top_wall.__dirtyRotation = true;
+
+				left_wall.__dirtyRotation = true;
+				left_wall_support1.__dirtyRotation = true;
+				left_wall_support2.__dirtyRotation = true;
+
+				right_wall.__dirtyRotation = true;
+				right_wall_support1.__dirtyRotation = true;
+				right_wall_support2.__dirtyRotation = true;
+
+				back_wall.__dirtyRotation = true;
+				back_wall_support1.__dirtyRotation = true;
+				back_wall_support2.__dirtyRotation = true;
+
+				front_wall.__dirtyRotation = true;
+				front_wall_support1.__dirtyRotation = true;
+				front_wall_support2.__dirtyRotation = true;
+			}
+		</script>
+	</body>
+</html>
