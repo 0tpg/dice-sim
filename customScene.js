@@ -88,7 +88,7 @@ function sceneInit() {
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMapSoft = true;
 
-	scene.setGravity(new THREE.Vector3(0, -110, 0));
+	scene.setGravity(new THREE.Vector3(0, -77.5, 0));
 
 	point_light.castShadow = true;
 	point_light.shadow.mapSize = new THREE.Vector2(1024 * 2, 1024 * 2);
