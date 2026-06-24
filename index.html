@@ -45,7 +45,7 @@
 
 				motion_control = new THREE.DeviceOrientationControls(center);
 
-				window.animate = function () {
+				animate = function () {
 					motion_control.update();
 					scene.simulate(1 / 10);
 
