@@ -2,7 +2,7 @@ const DEFAULT_OBJ_DEPTH = 200,
 	DIE_OFFSET = 60;
 
 Physijs.scripts.worker = 'libs/physijs_worker.js';
-Physijs.scripts.ammo = 'libs/ammo.js';
+Physijs.scripts.ammo = 'ammo.js';
 
 var renderer = new THREE.WebGLRenderer({ antialias: true }),
 	clock = new THREE.Clock(true),
