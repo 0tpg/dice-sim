@@ -88,7 +88,7 @@ function sceneInit() {
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMapSoft = true;
 
-	scene.setGravity(new THREE.Vector3(0, -55, 0));
+	scene.setGravity(new THREE.Vector3(0, -110, 0));
 
 	point_light.castShadow = true;
 	point_light.shadow.mapSize = new THREE.Vector2(1024 * 2, 1024 * 2);
@@ -183,7 +183,7 @@ function containerInit() {
 	);
 
 	base_wall = new Physijs.BoxMesh(
-		new THREE.BoxGeometry(DEFAULT_OBJ_LENGTH, 1, DEFAULT_OBJ_DEPTH),
+		new THREE.BoxGeometry(DEFAULT_OBJ_LENGTH, 50, DEFAULT_OBJ_DEPTH),
 		Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
 				color: 'navy',
@@ -206,7 +206,7 @@ function containerInit() {
 	center.add(top_wall);
 
 	left_wall = new Physijs.BoxMesh(
-		new THREE.BoxGeometry(DEFAULT_OBJ_LENGTH, 1, DEFAULT_OBJ_DEPTH),
+		new THREE.BoxGeometry(DEFAULT_OBJ_LENGTH, 50, DEFAULT_OBJ_DEPTH),
 		Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
 				color: 'navy',
@@ -254,7 +254,7 @@ function containerInit() {
 	center.add(right_wall_support2);
 
 	back_wall = new Physijs.BoxMesh(
-		new THREE.BoxGeometry(DEFAULT_OBJ_LENGTH, DEFAULT_OBJ_LENGTH, 1),
+		new THREE.BoxGeometry(DEFAULT_OBJ_LENGTH, DEFAULT_OBJ_LENGTH, 50),
 		Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
 				color: 'navy',
