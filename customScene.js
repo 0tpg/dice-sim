@@ -69,7 +69,7 @@ function frame() {
 	if( animate ) {
 		animate();
 	}
-	
+
 	renderer.render( scene, camera );
 }
 
@@ -77,7 +77,7 @@ function sceneInit() {
 	if( !THREE.WEBGL.isWebGLAvailable() ) {
 		alert( THREE.WEBGL.getWebGLErrorMessage() );
 	}
-	
+
 	document.body.appendChild( renderer.domElement );
 	document.body.style.margin = 0;
 	document.body.style.overflow = 'hidden';
@@ -86,13 +86,13 @@ function sceneInit() {
 	renderer.shadowMapSoft = true;
 
 	scene.setGravity( new THREE.Vector3( 0, -55, 0 ) );
-	
+
 	point_light.castShadow = true;
 	point_light.shadow.mapSize = new THREE.Vector2( 1024*2, 1024*2 );
 	scene.add( point_light );
 
 	scene.add( ambient_light );
-	
+
 	window.addEventListener( 'resize', onWindowResize, false );
 	onWindowResize();
 }
@@ -175,7 +175,7 @@ function containerInit() {
 				side: THREE.FrontSide,
 				visible: false
 			})
-		),				
+		),
 		0
 	);
 
@@ -189,19 +189,19 @@ function containerInit() {
 			}),
 			0.3,
 			0.5
-		),				
+		),
 		0
 	);
 	base_wall.position.set( 0, -VISIBLE_HEIGHT/2 + 25, 0 );
 	base_wall.receiveShadow = true;
 	center.add( base_wall );
-	
+
 	top_wall = base_wall.clone();
 	top_wall.position.set( 0, VISIBLE_HEIGHT/2 - 25, 0 );
 	top_wall.rotation.set( 0, 0, Math.PI );
 	top_wall.receiveShadow = true;
 	center.add( top_wall );
-	
+
 	left_wall = new Physijs.BoxMesh(
 		new THREE.BoxGeometry( DEFAULT_OBJ_LENGTH, 1, DEFAULT_OBJ_DEPTH ),
 		Physijs.createMaterial(
@@ -212,7 +212,7 @@ function containerInit() {
 			}),
 			0.3,
 			0.5
-		),				
+		),
 		0
 	);
 	left_wall.position.set( -VISIBLE_WIDTH/2 + 25, 0, 0 );
@@ -231,7 +231,7 @@ function containerInit() {
 	left_wall_support2.rotation.set( 0, 0, Math.PI/2 );
 	left_wall_support2.receiveShadow = true;
 	center.add( left_wall_support2 );
-	
+
 	right_wall = left_wall.clone();
 	right_wall.position.set( VISIBLE_WIDTH/2 - 25, 0, 0 );
 	right_wall.rotation.set( 0, 0, -Math.PI/2 );
@@ -249,7 +249,7 @@ function containerInit() {
 	right_wall_support2.rotation.set( 0, 0, -Math.PI/2 );
 	right_wall_support2.receiveShadow = true;
 	center.add( right_wall_support2 );
-	
+
 	back_wall = new Physijs.BoxMesh(
 		new THREE.BoxGeometry( DEFAULT_OBJ_LENGTH, DEFAULT_OBJ_LENGTH, 1 ),
 		Physijs.createMaterial(
@@ -260,7 +260,7 @@ function containerInit() {
 			}),
 			0.3,
 			0.5
-		),				
+		),
 		0
 	);
 	back_wall.position.set( 0, 0, -DEFAULT_OBJ_DEPTH/2 + 25 );
@@ -279,7 +279,7 @@ function containerInit() {
 	back_wall_support2.rotation.set( 0, Math.PI, 0 );
 	back_wall_support2.receiveShadow = true;
 	center.add( back_wall_support2 );
-	
+
 	front_wall = back_wall.clone();
 	front_wall.position.set( 0, 0, DEFAULT_OBJ_DEPTH/2 - 25 );
 	front_wall.visible = false;
@@ -374,24 +374,26 @@ function containerInit() {
 	front_wall_support2.addEventListener( 'collision', collision );
 }
 
-window.addEventListener( "devicemotion", deviceMotion, true );
 function deviceMotion( event ) {
-	accel_x = event.acceleration.x.toFixed( 1 );
-	accel_y = event.acceleration.y.toFixed( 1 );
-	accel_z = event.acceleration.z.toFixed( 1 );
+	var acc = event.acceleration || event.accelerationIncludingGravity;
+	if (!acc || acc.x === null) return;
+
+	accel_x = parseFloat(acc.x).toFixed( 1 );
+	accel_y = parseFloat(acc.y).toFixed( 1 );
+	accel_z = parseFloat(acc.z).toFixed( 1 );
 
 	if( accel_x != 0 ) {
 		if( die1.position.y <= lowest_border ) {
 			die1.applyCentralForce( new THREE.Vector3( 0, 0, 3000*accel_x ) );
-		}	
+		}
 		if( die1.position.y  >= highest_border ) {
 			die1.applyCentralForce( new THREE.Vector3( -3000*accel_x, 0, 0 ) );
-		}	
+		}
 		if( ( die1.position.x <= leftmost_border && die1.position.y >= lowest_border && die1.position.y <= highest_border ) ||
 			( die1.position.z <= furthest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x >= leftmost_border && die1.position.x <= center.position.x ) ||
 			( die1.position.z >= closest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x >= leftmost_border && die1.position.x <= center.position.x ) ) {
 			die1.applyCentralForce( new THREE.Vector3( 0, Math.abs( 3000*accel_x ), 0 ) );
-		}	
+		}
 		if( ( die1.position.x >= rightmost_border && die1.position.y >= lowest_border && die1.position.y <= highest_border ) ||
 			( die1.position.z <= furthest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x <= rightmost_border && die1.position.x >= center.position.x ) ||
 			( die1.position.z >= closest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x <= rightmost_border && die1.position.x >= center.position.x ) ) {
@@ -400,15 +402,15 @@ function deviceMotion( event ) {
 
 		if( die2.position.y <= lowest_border ) {
 			die2.applyCentralForce( new THREE.Vector3( 0, 0, 3000*accel_x ) );
-		}	
+		}
 		if( die2.position.y  >= highest_border ) {
 			die2.applyCentralForce( new THREE.Vector3( -3000*accel_x, 0, 0 ) );
-		}	
+		}
 		if( ( die2.position.x <= leftmost_border && die2.position.y >= lowest_border && die2.position.y <= highest_border ) ||
 			( die2.position.z <= furthest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x >= leftmost_border && die2.position.x <= center.position.x ) ||
 			( die2.position.z >= closest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x >= leftmost_border && die2.position.x <= center.position.x ) ) {
 			die2.applyCentralForce( new THREE.Vector3( 0, Math.abs( 3000*accel_x ), 0 ) );
-		}	
+		}
 		if( ( die2.position.x >= rightmost_border && die2.position.y >= lowest_border && die2.position.y <= highest_border ) ||
 			( die2.position.z <= furthest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x <= rightmost_border && die2.position.x >= center.position.x ) ||
 			( die2.position.z >= closest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x <= rightmost_border && die2.position.x >= center.position.x ) ) {
@@ -419,15 +421,15 @@ function deviceMotion( event ) {
 	if( accel_y != 0 ) {
 		if( die1.position.y <= lowest_border ) {
 			die1.applyCentralForce( new THREE.Vector3( 0, 3000*accel_y, 0 ) );
-		}	
+		}
 		if( die1.position.y  >= highest_border ) {
 			die1.applyCentralForce( new THREE.Vector3( 0, -3000*accel_y, 0 ) );
-		}	
+		}
 		if( ( die1.position.x <= leftmost_border && die1.position.y >= lowest_border && die1.position.y <= highest_border ) ||
 			( die1.position.z <= furthest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x >= leftmost_border && die1.position.x <= center.position.x ) ||
 			( die1.position.z >= closest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x >= leftmost_border && die1.position.x <= center.position.x ) ) {
 			die1.applyCentralForce( new THREE.Vector3( 0, 0, 3000*accel_y ) );
-		}	
+		}
 		if( ( die1.position.x >= rightmost_border && die1.position.y >= lowest_border && die1.position.y <= highest_border ) ||
 			( die1.position.z <= furthest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x <= rightmost_border && die1.position.x >= center.position.x ) ||
 			( die1.position.z >= closest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x <= rightmost_border && die1.position.x >= center.position.x ) ) {
@@ -436,15 +438,15 @@ function deviceMotion( event ) {
 
 		if( die2.position.y <= lowest_border ) {
 			die2.applyCentralForce( new THREE.Vector3( 0, 3000*accel_y, 0 ) );
-		}	
+		}
 		if( die2.position.y  >= highest_border ) {
 			die2.applyCentralForce( new THREE.Vector3( 0, -3000*accel_y, 0 ) );
-		}	
+		}
 		if( ( die2.position.x <= leftmost_border && die2.position.y >= lowest_border && die2.position.y <= highest_border ) ||
 			( die2.position.z <= furthest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x >= leftmost_border && die2.position.x <= center.position.x ) ||
 			( die2.position.z >= closest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x >= leftmost_border && die2.position.x <= center.position.x ) ) {
 			die2.applyCentralForce( new THREE.Vector3( 0, 0, 3000*accel_y ) );
-		}	
+		}
 		if( ( die2.position.x >= rightmost_border && die2.position.y >= lowest_border && die2.position.y <= highest_border ) ||
 			( die2.position.z <= furthest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x <= rightmost_border && die2.position.x >= center.position.x ) ||
 			( die2.position.z >= closest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x <= rightmost_border && die2.position.x >= center.position.x ) ) {
@@ -455,15 +457,15 @@ function deviceMotion( event ) {
 	if( accel_z != 0 ) {
 		if( die1.position.y <= lowest_border ) {
 			die1.applyCentralForce( new THREE.Vector3( 3000*accel_z, 0, 0 ) );
-		}	
+		}
 		if( die1.position.y  >= highest_border ) {
 			die1.applyCentralForce( new THREE.Vector3( 0, 0, -3000*accel_z ) );
-		}	
+		}
 		if( ( die1.position.x <= leftmost_border && die1.position.y >= lowest_border && die1.position.y <= highest_border ) ||
 			( die1.position.z <= furthest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x >= leftmost_border && die1.position.x <= center.position.x ) ||
 			( die1.position.z >= closest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x >= leftmost_border && die1.position.x <= center.position.x ) ) {
 			die1.applyCentralForce( new THREE.Vector3( 3000*accel_z, 0, 0 ) );
-		}	
+		}
 		if( ( die1.position.x >= rightmost_border && die1.position.y >= lowest_border && die1.position.y <= highest_border ) ||
 			( die1.position.z <= furthest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x <= rightmost_border && die1.position.x >= center.position.x ) ||
 			( die1.position.z >= closest_border && die1.position.y >= lowest_border && die1.position.y <= highest_border && die1.position.x <= rightmost_border && die1.position.x >= center.position.x ) ) {
@@ -472,15 +474,15 @@ function deviceMotion( event ) {
 
 		if( die2.position.y <= lowest_border ) {
 			die2.applyCentralForce( new THREE.Vector3( 3000*accel_z, 0, 0 ) );
-		}	
+		}
 		if( die2.position.y  >= highest_border ) {
 			die2.applyCentralForce( new THREE.Vector3( 0, 0, -3000*accel_z ) );
-		}	
+		}
 		if( ( die2.position.x <= leftmost_border && die2.position.y >= lowest_border && die2.position.y <= highest_border ) ||
 			( die2.position.z <= furthest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x >= leftmost_border && die2.position.x <= center.position.x ) ||
 			( die2.position.z >= closest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x >= leftmost_border && die2.position.x <= center.position.x ) ) {
 			die2.applyCentralForce( new THREE.Vector3( 3000*accel_z, 0, 0 ) );
-		}	
+		}
 		if( ( die2.position.x >= rightmost_border && die2.position.y >= lowest_border && die2.position.y <= highest_border ) ||
 			( die2.position.z <= furthest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x <= rightmost_border && die2.position.x >= center.position.x ) ||
 			( die2.position.z >= closest_border && die2.position.y >= lowest_border && die2.position.y <= highest_border && die2.position.x <= rightmost_border && die2.position.x >= center.position.x ) ) {
@@ -768,7 +770,7 @@ function diceInit() {
 		THREE.Math.randInt( center.position.z - DIE_OFFSET, center.position.z + DIE_OFFSET )
 	);
 	die1.rotation.set(
-		THREE.Math.randFloat( 0, 2*Math.PI ), 
+		THREE.Math.randFloat( 0, 2*Math.PI ),
 		THREE.Math.randFloat( 0, 2*Math.PI ),
 		THREE.Math.randFloat( 0, 2*Math.PI )
 	);
@@ -1077,7 +1079,7 @@ function diceInit() {
 		THREE.Math.randInt( center.position.z - DIE_OFFSET, center.position.z + DIE_OFFSET )
 	);
 	die2.rotation.set(2*
-		THREE.Math.randFloat( 0, 2*Math.PI ), 
+		THREE.Math.randFloat( 0, 2*Math.PI ),
 		THREE.Math.randFloat( 0, 2*Math.PI ),
 		THREE.Math.randFloat( 0, 2*Math.PI )
 	);

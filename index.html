@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-
 <html>
+
 	<head>
 		<title>dice-sim</title>
 		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		
 		<script src="libs/three.min.js"></script>
 		<script src="libs/WebGL.js"></script>
 		<script src="libs/physi.js"></script>
@@ -15,48 +15,84 @@
 	</head>
 
 	<body style="margin: 0px; overflow: hidden;" class="vsc-initialized">
+
+		<div id="overlay"
+			style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,128,0.9); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+			<button id="start-btn"
+				style="padding: 15px 30px; font-size: 20px; cursor: pointer; border-radius: 8px; border: none; background: #fff; color: navy; font-weight: bold;">
+				Start Dice Simulator
+			</button>
+		</div>
+
 		<script>
-			sceneInit();
+			var VISIBLE_WIDTH, VISIBLE_HEIGHT;
 
-			const VISIBLE_WIDTH = visibleWidth( DEFAULT_OBJ_DEPTH, camera ),
-				  VISIBLE_HEIGHT = visibleHeight( DEFAULT_OBJ_DEPTH, camera );
-				  
-			containerInit();
+			function initApp() {
+				document.getElementById('overlay').style.display = 'none';
 
-			camera.position.set( 0, 0.7*VISIBLE_HEIGHT/3, 2.1*DEFAULT_OBJ_DEPTH/2 );
-			camera.lookAt( new THREE.Vector3( 0, 10, -DEFAULT_OBJ_DEPTH/2 ) );
-			point_light.position.set( 0, VISIBLE_HEIGHT/6, 0 );
+				sceneInit();
 
-			diceInit();
+				VISIBLE_WIDTH = visibleWidth(DEFAULT_OBJ_DEPTH, camera);
+				VISIBLE_HEIGHT = visibleHeight(DEFAULT_OBJ_DEPTH, camera);
 
-			motion_control = new THREE.DeviceOrientationControls( center );
+				containerInit();
 
-			function animate() {
-				motion_control.update();
-				scene.simulate( 1/10 );
+				camera.position.set(0, 0.7 * VISIBLE_HEIGHT / 3, 2.1 * DEFAULT_OBJ_DEPTH / 2);
+				camera.lookAt(new THREE.Vector3(0, 10, -DEFAULT_OBJ_DEPTH / 2));
+				point_light.position.set(0, VISIBLE_HEIGHT / 6, 0);
 
-				outOfBoundsAnimationHandler();
+				diceInit();
 
-				center.__dirtyRotation = true;
-				base_wall.__dirtyRotation = true;
-				top_wall.__dirtyRotation = true;
+				motion_control = new THREE.DeviceOrientationControls(center);
 
-				left_wall.__dirtyRotation = true;
-				left_wall_support1.__dirtyRotation = true;
-				left_wall_support2.__dirtyRotation = true;
+				window.animate = function () {
+					motion_control.update();
+					scene.simulate(1 / 10);
 
-				right_wall.__dirtyRotation = true;
-				right_wall_support1.__dirtyRotation = true;
-				right_wall_support2.__dirtyRotation = true;
+					outOfBoundsAnimationHandler();
 
-				back_wall.__dirtyRotation = true;
-				back_wall_support1.__dirtyRotation = true;
-				back_wall_support2.__dirtyRotation = true;
+					center.__dirtyRotation = true;
+					base_wall.__dirtyRotation = true;
+					top_wall.__dirtyRotation = true;
 
-				front_wall.__dirtyRotation = true;
-				front_wall_support1.__dirtyRotation = true;
-				front_wall_support2.__dirtyRotation = true;
+					left_wall.__dirtyRotation = true;
+					left_wall_support1.__dirtyRotation = true;
+					left_wall_support2.__dirtyRotation = true;
+
+					right_wall.__dirtyRotation = true;
+					right_wall_support1.__dirtyRotation = true;
+					right_wall_support2.__dirtyRotation = true;
+
+					back_wall.__dirtyRotation = true;
+					back_wall_support1.__dirtyRotation = true;
+					back_wall_support2.__dirtyRotation = true;
+
+					front_wall.__dirtyRotation = true;
+					front_wall_support1.__dirtyRotation = true;
+					front_wall_support2.__dirtyRotation = true;
+				}
 			}
+
+			function requestSensorPermissions() {
+				if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+					DeviceMotionEvent.requestPermission()
+						.then(permissionState => {
+							if (permissionState === 'granted') {
+								window.addEventListener("devicemotion", deviceMotion, true);
+								initApp();
+							} else {
+								alert("Motion sensors are required to roll the dice.");
+							}
+						})
+						.catch(console.error);
+				} else {
+					window.addEventListener("devicemotion", deviceMotion, true);
+					initApp();
+				}
+			}
+
+			document.getElementById('start-btn').addEventListener('click', requestSensorPermissions);
 		</script>
 	</body>
+
 </html>
